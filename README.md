@@ -1,8 +1,8 @@
 # claude-skills
 
-Four [Claude Code](https://www.claude.com/product/claude-code) skills I built because I kept needing them, then kept using them.
+Five [Claude Code](https://www.claude.com/product/claude-code) skills I built because I kept needing them, then kept using them.
 
-They do the thinking-heavy work: stress-test a piece of real work, rewrite it stronger, set an autonomous-loop goal that actually stops, and fact-check the AI advice that goes stale a week after someone posts it. Every one of them runs on the same stubborn rule—**don't let the model grade its own homework.** A model that just helped you build something will defend its own reasoning the moment you ask it to critique that work; these hand the feedback to a fresh process that never saw how the sausage got made. And where forgetting a step produces confidently-wrong output—a security doc reviewed at shallow depth reads exactly like a clean one—the skill enforces the step in code instead of hoping the model remembers.
+They do the thinking-heavy work: stress-test a piece of real work, make it leaner without breaking it, rewrite it stronger, set an autonomous-loop goal that actually stops, and fact-check the AI advice that goes stale a week after someone posts it. Every one of them runs on the same stubborn rule—**don't let the model grade its own homework.** A model that just helped you build something will defend its own reasoning the moment you ask it to critique that work; these hand the feedback to a fresh process that never saw how the sausage got made. And where forgetting a step produces confidently-wrong output—a security doc reviewed at shallow depth reads exactly like a clean one—the skill enforces the step in code instead of hoping the model remembers.
 
 Built and maintained by [Rob McQuade](https://robmcquade.com/skills). MIT licensed. Take them, fork them, make them yours.
 
@@ -12,8 +12,9 @@ Built and maintained by [Rob McQuade](https://robmcquade.com/skills). MIT licens
 
 | Skill | What it does | Invoke |
 |---|---|---|
-| **pressure-test** | Stress-tests real work—files, contracts, prompts, decisions—with a panel of fresh-context critics, then hands back a specific fix for each weakness. Finds and prescribes; doesn't rewrite. | `/pressure-test [deep]` |
-| **improve** | Takes an artifact, an idea, or a half-formed argument and hands back a genuinely stronger rewrite—checked for drift and voice-flattening before you ever see it. Produces the result. | `/improve [deep]` |
+| **pressure-test** | Stress-tests real work—files, contracts, prompts, decisions—with a panel of fresh-context critics, checks prior art (has someone already hit this and solved it?), and hands back a specific fix for each weakness. Finds and prescribes; built to pair with **improve**, which executes the fixes. | `/pressure-test [deep]` |
+| **improve** | Takes an artifact, an idea, or a half-formed argument and hands back a genuinely stronger rewrite—checked for drift and voice-flattening before you ever see it. Produces the result; hand it **pressure-test**'s findings and it folds them straight in. | `/improve [deep]` |
+| **optimize-efficiency** | Reviews code, a script, a process, a prompt, or a plan for waste—resource use, speed, tokens—and returns location-anchored fixes, each through a hard no-regression gate so a "win" never quietly costs you correctness, safety, or security. Recommends; pairs with **improve** to execute. | `/optimize-efficiency [deep]` |
 | **set-goal** | Writes a finish line for Claude Code's built-in `/goal` loop that the evaluator can actually check—so the loop stops instead of running all night. | `/set-goal [deep]` |
 | **evaluate-ai-merits** | Fact-checks the AI-tooling content you just read against primary sources, and flags the parts that date fast—a model-version tip passed off as universal, a preview feature sold as shipped. | (auto-fires on AI content, or invoke directly) |
 
@@ -21,10 +22,12 @@ Built and maintained by [Rob McQuade](https://robmcquade.com/skills). MIT licens
 
 These two are opposite halves of one pipeline, and the reason this set exists.
 
-- **`/pressure-test`** *finds and prescribes.* It spins up a panel of fresh-context critics, each handed only your artifact and what it's supposed to do. None of them watched you build it, so they critique the thing instead of the story behind it. You get the diagnosis—strengths, weaknesses, the assumptions you smuggled in without noticing—plus a specific fix for each weakness. It doesn't touch your work.
+- **`/pressure-test`** *finds and prescribes.* It spins up a panel of fresh-context critics, each handed only your artifact and what it's supposed to do. None of them watched you build it, so they critique the thing instead of the story behind it. You get the diagnosis—strengths, weaknesses, the assumptions you smuggled in without noticing—plus a specific fix for each weakness. It also checks prior art: has someone already hit this and solved it, so you're not reinventing a fix that already exists? It doesn't touch your work.
 - **`/improve`** *executes.* A fresh critic finds what's weak, the work gets revised, repeat until it stops improving—then an independent verifier reads the rewrite against the original and flags any spot where the meaning shifted or your voice got sanded down to house style. Only then does it reach you.
 
-Run them in order: pressure-test to find the problems, improve to fix them. Hand `/improve` the recommendations from `/pressure-test` and it treats them as the first critique pass and goes straight to revising.
+Run them in order: pressure-test to find the problems, improve to fix them. Hand `/improve` the recommendations from `/pressure-test` and it recognizes the critique's already been done—it folds them in as the first pass and goes straight to revising, instead of re-deriving them. And you don't have to stop at one round: pressure-test the improved version, feed the new findings back to improve, and keep alternating for as many turns as the work earns. They're built for that loop.
+
+Both are built for Claude Code, where the fresh-eyes processes and enforced gates actually run. They'll work on the claude.ai web app too, but in a reduced single-context form—and each says so up front when it can't run the full path.
 
 Each skill ships with its operating **`SKILL.md`**; the two above also include a plain-language **`EXPLAINER.md`** that walks through what they are and why they're built this way—no jargon required.
 
@@ -32,7 +35,7 @@ Each skill ships with its operating **`SKILL.md`**; the two above also include a
 
 ## Why they're built this way
 
-One thread runs through all four, and it's a refusal: don't let the model grade its own homework.
+One thread runs through all five, and it's a refusal: don't let the model grade its own homework.
 
 - **Fresh context, not self-review.** A model that just helped build something carries that work's reasoning into any critique of it—it restates and defends instead of diagnosing. So pressure-test and improve push the critique to separate processes handed only the artifact and the goal. Outside eyes, in seconds.
 - **Enforcement where forgetting is expensive.** A security document reviewed at shallow depth reads exactly like a clean one—the failure is invisible. So pressure-test's sensitivity escalation, panel size, quote-existence check, and web firewall are owned by a deterministic script. The model does judgment *inside* the gates; it doesn't get to skip them. What's enforced versus what's left to judgment is written down honestly in [`pressure-test/references/enforcement-model.md`](pressure-test/references/enforcement-model.md)—the skill never claims more rigor than it has.
@@ -53,7 +56,7 @@ cd claude-skills
 
 # copy the skills you want into your personal skills dir
 mkdir -p ~/.claude/skills
-cp -r pressure-test improve set-goal evaluate-ai-merits ~/.claude/skills/
+cp -r pressure-test improve optimize-efficiency set-goal evaluate-ai-merits ~/.claude/skills/
 ```
 
 On Windows (PowerShell):
@@ -62,12 +65,12 @@ On Windows (PowerShell):
 git clone https://github.com/robmcquade/claude-skills.git
 Set-Location claude-skills
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
-foreach ($s in 'pressure-test','improve','set-goal','evaluate-ai-merits') {
+foreach ($s in 'pressure-test','improve','optimize-efficiency','set-goal','evaluate-ai-merits') {
   Copy-Item -Recurse -Force ".\$s" "$HOME\.claude\skills\$s"
 }
 ```
 
-Keep each skill directory whole—`SKILL.md` at the root, plus the bundled `scripts/`, `schemas/`, and `references/` for pressure-test. Start a new Claude Code session and they show up; invoke with `/pressure-test`, `/improve`, `/set-goal`. (`evaluate-ai-merits` can fire on its own when you share AI-tooling content, or you can invoke it directly.) Three of the four are user-invoked only—they never fire unless you ask.
+Keep each skill directory whole—`SKILL.md` at the root, plus the bundled `scripts/`, `schemas/`, and `references/` for pressure-test. Start a new Claude Code session and they show up; invoke with `/pressure-test`, `/improve`, `/optimize-efficiency`, `/set-goal`. (`evaluate-ai-merits` can fire on its own when you share AI-tooling content, or you can invoke it directly.) Four of the five are user-invoked only—they never fire unless you ask.
 
 ---
 
