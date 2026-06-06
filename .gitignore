@@ -1,0 +1,10 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local scratch — never commit working artifacts or .orig sidecars
+*.orig
+/tmp/
+/.scratch/

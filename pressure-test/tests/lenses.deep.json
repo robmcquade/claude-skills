@@ -1,0 +1,7 @@
+[
+  { "name": "risk-surface", "mandate": "what would make THIS fail at its purpose", "web": false, "calibrated": false },
+  { "name": "enforceability", "mandate": "which critical mechanisms are enforced vs hoped", "web": false, "calibrated": true },
+  { "name": "failure-modes", "mandate": "how it goes wrong in practice", "web": false, "calibrated": false },
+  { "name": "hidden-assumptions", "mandate": "what is smuggled in unstated", "web": false, "calibrated": false },
+  { "name": "prior-art", "mandate": "has this been done capably already", "web": true, "calibrated": false }
+]

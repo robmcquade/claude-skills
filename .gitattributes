@@ -1,0 +1,8 @@
+# Normalize line endings: store text as LF in the repo, check out native.
+* text=auto eol=lf
+
+# PowerShell scripts: keep LF in the repo (pwsh runs them fine on every OS).
+*.ps1 text eol=lf
+*.md  text eol=lf
+*.json text eol=lf
+*.txt text eol=lf

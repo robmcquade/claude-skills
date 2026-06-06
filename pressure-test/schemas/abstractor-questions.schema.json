@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "pressure-test prior-art abstractor (firewall stage A)",
+  "description": "Local-only critic that holds the sensitive artifact. Emits local prior-art findings AND scrubbed, generic research questions for the separate web searcher — which never sees the artifact.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lens", "status", "findings", "research_questions", "highest_leverage"],
+  "properties": {
+    "lens": { "type": "string" },
+    "status": { "type": "string", "enum": ["complete"] },
+    "findings": {
+      "type": "array",
+      "description": "local prior-art findings (e.g. contradicts a documented prior decision/standard; reinvents prior work) — evidence_kind should be artifact-quote or external-source(local file)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "severity", "evidence_kind", "quote", "fix", "confidence"],
+        "properties": {
+          "title": { "type": "string" },
+          "severity": { "type": "string", "enum": ["Critical", "Should-fix", "Minor"] },
+          "evidence_kind": { "type": "string", "enum": ["artifact-quote", "artifact-absence", "external-source"] },
+          "quote": { "type": "string" },
+          "fix": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "research_questions": {
+      "type": "array",
+      "description": "2-4 GENERIC prior-art questions about the technique/pattern only. MUST NOT contain any secret value, PII, client/person name, internal hostname, file path, or distinguishing specific from the artifact. If a question cannot be asked without revealing specifics, omit it.",
+      "items": { "type": "string" },
+      "maxItems": 4
+    },
+    "highest_leverage": { "type": "string" }
+  }
+}

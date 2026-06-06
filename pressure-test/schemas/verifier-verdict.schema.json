@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "pressure-test verifier verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rulings", "soft_lenses"],
+  "properties": {
+    "rulings": {
+      "type": "array",
+      "description": "one ruling per pooled finding, keyed by the finding id it was given",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "verdict", "severity", "lens", "quote", "fix", "rationale"],
+        "properties": {
+          "id": { "type": "string", "description": "the stable finding id assigned by the orchestrator (e.g. F03)" },
+          "verdict": { "type": "string", "enum": ["KEEP", "DOWNGRADE", "DROP"] },
+          "severity": { "type": "string", "enum": ["Critical", "Should-fix", "Minor"], "description": "severity after this ruling (may differ from the critic's if DOWNGRADE)" },
+          "lens": { "type": "string" },
+          "quote": { "type": "string" },
+          "fix": { "type": "string" },
+          "rationale": { "type": "string", "description": "one line: the quote/evidence that justifies KEEP/DOWNGRADE/DROP" }
+        }
+      }
+    },
+    "soft_lenses": {
+      "type": "array",
+      "description": "lenses that returned zero or only-Minor findings — flag whether genuinely empty or pulled punches",
+      "items": { "type": "string" }
+    }
+  }
+}

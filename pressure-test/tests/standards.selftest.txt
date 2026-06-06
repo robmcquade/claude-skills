@@ -1,0 +1,39 @@
+Example author standards (for the calibrated critic — check against THESE, not generic best practice).
+This file is the self-test's calibration slice; it also doubles as a template for your own
+StandardsPath file. Replace these with your own standards when you point the calibrated critic at a
+real artifact.
+
+- Verify, never infer. Never infer a file's contents/purpose/state from its name — open it.
+  Verifying rather than guessing or assuming is fundamental.
+- Durable-consequence rules need ENFORCEMENT at output time, not loading discipline / prose.
+  "Triggering is judgment, not deterministic — a probabilistic safety net, not a hard guarantee."
+  A skill body or instructions doc is context, not enforced config.
+- Plain language. When a command runs, say in one line what it does. Don't use a system's
+  terms-of-art as bare shorthand without spelling them out.
+- Deliverables: fully-merged file artifacts, never deltas/snippets. Reference files by exact path.
+- Outcome-oriented: state the desired outcome before the procedure.
+- Skill validator constraints: description <=1024 chars, no angle brackets, no bare colons; body
+  <500 lines; exactly one SKILL.md; allowed frontmatter keys only.
+- Windows-first authoring: prefer PowerShell 7 (pwsh); backslash paths break the Bash tool.
+
+Context that bounds what counts as a real defect for THIS artifact (do not flag these as findings):
+- Bundled-script paths use the `${CLAUDE_SKILL_DIR}` Claude Code substitution, which resolves
+  per-install. Treat those as correct, not as unresolved variables.
+- Two steps are an ACCEPTED, DOCUMENTED irreducible judgment floor (see references/enforcement-model.md):
+  (1) the agent choosing to invoke the orchestrator / run the gate (the mode probe), and
+  (2) covering every surviving finding in the final synthesis prose. No skill text can force a
+  reading agent to do either. Findings that these two specific steps are "prose-hoped / not
+  mechanically enforced" are BY DESIGN and already disclosed — do not raise them as defects. (This
+  does NOT excuse any OTHER mechanism being prose-hoped — only these two named bookends.)
+- Tool blocking is via `disallowed-tools` (deny rules block); `allowed-tools` only pre-approves and
+  does not restrict. The skill uses `disallowed-tools: WebSearch, WebFetch` for the main-session firewall.
+- `disable-model-invocation: true` IS a documented Claude Code skill frontmatter key ("only the user
+  can invoke") — do not flag it as undocumented or as unenforced "never automatic" prose.
+- `${CLAUDE_SKILL_DIR}` IS a documented Claude Code substitution for the skill's own directory,
+  resolved into the text at load — do not flag it as an unverifiable/unresolved variable.
+- A THIRD accepted judgment-floor step (besides the two above): honestly relaying the user's
+  `UncertainResolution='standard'` choice. Its blast radius is bounded by the HARD-signal floor. Do
+  not flag this specific relay as a defect.
+- Prior-art findings must be ACTIONABLE defects in THIS artifact. "No industry convention exists for
+  X," or "technique Y has known residual limits" where that limit is already disclosed as
+  judgment-grade in enforcement-model.md, are NOT defects — do not raise them as findings.

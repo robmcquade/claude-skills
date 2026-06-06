@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "pressure-test critic findings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lens", "status", "findings", "highest_leverage"],
+  "properties": {
+    "lens": { "type": "string", "description": "the single lens this critic applied" },
+    "status": {
+      "type": "string",
+      "enum": ["complete"],
+      "description": "sentinel — a successfully completed critic MUST emit 'complete'"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "severity", "evidence_kind", "quote", "fix", "confidence"],
+        "properties": {
+          "title": { "type": "string" },
+          "severity": { "type": "string", "enum": ["Critical", "Should-fix", "Minor"] },
+          "evidence_kind": {
+            "type": "string",
+            "enum": ["artifact-quote", "artifact-absence", "external-source"],
+            "description": "artifact-quote = 'quote' is a verbatim substring of the artifact (gets quote-existence checked, dropped if not found); artifact-absence = a finding about something MISSING, 'quote' is a nearby anchor line that IS in the artifact (judged by the verifier, NOT substring-dropped); external-source = prior-art/web finding, 'quote' is the external source/URL (not substring-checked)"
+          },
+          "quote": {
+            "type": "string",
+            "description": "artifact-quote: the exact substring from the artifact. artifact-absence: a nearby anchor line that exists in the artifact, for context. external-source: the source name/URL."
+          },
+          "fix": { "type": "string", "description": "specific actionable recommendation (not a rewrite)" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "highest_leverage": { "type": "string", "description": "the single highest-leverage change for this lens" }
+  }
+}
