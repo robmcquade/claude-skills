@@ -1,8 +1,10 @@
 # claude-skills
 
-Four production-grade [Claude Code](https://www.claude.com/product/claude-code) skills for doing serious thinking work — stress-testing an artifact, rewriting it stronger, setting a verifiable autonomous-loop goal, and fact-checking content about AI tooling. Each one is built around a single idea: **fresh, unanchored judgment beats a model grading its own work** — and where a missed step would produce confidently-wrong output, the skill enforces it deterministically instead of hoping the model remembers.
+Four [Claude Code](https://www.claude.com/product/claude-code) skills I built because I kept needing them, then kept using them.
 
-Built and maintained by [Rob McQuade](https://robmcquade.com/skills).
+They do the thinking-heavy work: stress-test a piece of real work, rewrite it stronger, set an autonomous-loop goal that actually stops, and fact-check the AI advice that goes stale a week after someone posts it. Every one of them runs on the same stubborn rule—**don't let the model grade its own homework.** A model that just helped you build something will defend its own reasoning the moment you ask it to critique that work; these hand the critique to a fresh process that never saw how the work got made. And where forgetting a step produces confidently-wrong output—a security doc reviewed at shallow depth reads exactly like a clean one—the skill enforces the step in code instead of hoping the model remembers.
+
+Built and maintained by [Rob McQuade](https://robmcquade.com/skills). MIT licensed. Take them, fork them, make them yours.
 
 ---
 
@@ -10,40 +12,40 @@ Built and maintained by [Rob McQuade](https://robmcquade.com/skills).
 
 | Skill | What it does | Invoke |
 |---|---|---|
-| **pressure-test** | Stress-tests a piece of real work — surfaces strengths, weaknesses, hidden assumptions, failure modes, and prior art, then hands back prioritized fixes. Finds and prescribes; does not rewrite. | `/pressure-test [deep]` |
-| **improve** | Takes an artifact, idea, or argument and returns a materially stronger *rewritten* version — verified for drift and regressions before it reaches you. Produces the result. | `/improve [deep]` |
-| **set-goal** | Composes a strong, machine-checkable condition for Claude Code's built-in `/goal` autonomous loop, validated against the transcript-only rule so the loop actually terminates. | `/set-goal [deep]` |
-| **evaluate-ai-merits** | Fact-checks external content about Claude, Anthropic products, MCP, agents, or AI tooling — routes to primary sources and flags the conflations that date fast (model-version, surface, preview-vs-GA). | (auto-fires on AI content, or invoke directly) |
+| **pressure-test** | Stress-tests real work—files, contracts, prompts, decisions—with a panel of fresh-context critics, then hands back a specific fix for each weakness. Finds and prescribes; doesn't rewrite. | `/pressure-test [deep]` |
+| **improve** | Takes an artifact, an idea, or a half-formed argument and hands back a genuinely stronger rewrite—checked for drift and voice-flattening before you ever see it. Produces the result. | `/improve [deep]` |
+| **set-goal** | Writes a finish line for Claude Code's built-in `/goal` loop that the evaluator can actually check—so the loop stops instead of running all night. | `/set-goal [deep]` |
+| **evaluate-ai-merits** | Fact-checks the AI-tooling content you just read against primary sources, and flags the parts that date fast—a model-version tip passed off as universal, a preview feature sold as shipped. | (auto-fires on AI content, or invoke directly) |
 
-### The flagship pairing: `pressure-test` → `improve`
+### The pairing I reach for most: `pressure-test` → `improve`
 
-These two are opposite halves of one pipeline and the reason this repo exists:
+These two are opposite halves of one pipeline, and the reason this set exists.
 
-- **`/pressure-test`** *finds and prescribes* — it spins up a panel of fresh-context critics that never saw how the work was made, so they critique the thing, not the story behind it. You get diagnosis plus a specific fix for each weakness.
-- **`/improve`** *executes* — it runs an evaluator-optimizer loop (a fresh critic finds what's weak, the work is revised, repeated until it converges) and an independent verifier checks the rewrite for meaning-drift and voice-flattening before you ever see it.
+- **`/pressure-test`** *finds and prescribes.* It spins up a panel of fresh-context critics, each handed only your artifact and what it's supposed to do. None of them watched you build it, so they critique the thing instead of the story behind it. You get the diagnosis—strengths, weaknesses, the assumptions you smuggled in without noticing—plus a specific fix for each weakness. It doesn't touch your work.
+- **`/improve`** *executes.* A fresh critic finds what's weak, the work gets revised, repeat until it stops improving—then an independent verifier reads the rewrite against the original and flags any spot where the meaning shifted or your voice got sanded down to house style. Only then does it reach you.
 
-Run them in sequence: pressure-test to find the problems, improve to fix them. Hand `/improve` the recommendations from `/pressure-test` and it treats them as the first critique pass.
+Run them in order: pressure-test to find the problems, improve to fix them. Hand `/improve` the recommendations from `/pressure-test` and it treats them as the first critique pass and goes straight to revising.
 
-Each skill ships with a plain-language **`EXPLAINER.md`** (what it is and why it's built that way) alongside the operating **`SKILL.md`**.
+Each skill ships with its operating **`SKILL.md`**; the two above also include a plain-language **`EXPLAINER.md`** that walks through what they are and why they're built this way—no jargon required.
 
 ---
 
-## Why these are built the way they are
+## Why they're built this way
 
-The common thread across all four is a refusal to let the model grade its own homework:
+One thread runs through all four, and it's a refusal: don't let the model grade its own homework.
 
-- **Fresh context, not self-review.** A model that just helped build something tends to restate and justify its own reasoning when asked to critique it — confirmation bias, baked in. pressure-test and improve push the critique into separate processes that were handed only the artifact and the goal.
-- **Enforcement where forgetting is expensive.** A security document reviewed at shallow depth reads exactly like a clean one. So pressure-test's sensitivity escalation, panel size, quote-existence check, and egress firewall are owned by a deterministic orchestrator script — the model does *judgment inside the gates*, not the gating itself. What's enforced versus left to judgment is spelled out honestly in [`pressure-test/references/enforcement-model.md`](pressure-test/references/enforcement-model.md).
-- **Bounded loops.** improve's loop is anchored to a stated goal, the evaluator (never the reviser) owns the stop, and there's a hard pass cap — so it can't polish forever. set-goal exists to make the *outer* `/goal` loop terminate by forcing a condition the evaluator can actually verify from the transcript.
-- **Honest degradation.** On a surface without a shell or subagents (e.g. the claude.ai web app), the enforced machinery can't run. Each skill detects this, runs the same logic single-context, and **leads with the disclosure** rather than pretending it ran the full path.
+- **Fresh context, not self-review.** A model that just helped build something carries that work's reasoning into any critique of it—it restates and defends instead of diagnosing. So pressure-test and improve push the critique to separate processes handed only the artifact and the goal. Outside eyes, in seconds.
+- **Enforcement where forgetting is expensive.** A security document reviewed at shallow depth reads exactly like a clean one—the failure is invisible. So pressure-test's sensitivity escalation, panel size, quote-existence check, and web firewall are owned by a deterministic script. The model does judgment *inside* the gates; it doesn't get to skip them. What's enforced versus what's left to judgment is written down honestly in [`pressure-test/references/enforcement-model.md`](pressure-test/references/enforcement-model.md)—the skill never claims more rigor than it has.
+- **Loops that stop.** improve's loop is anchored to a goal you confirm up front, the evaluator—never the reviser—owns the call to stop, and there's a hard pass cap. So it can't polish forever. set-goal exists to make the *outer* `/goal` loop stop too, by forcing a finish line the evaluator can verify from the transcript alone.
+- **Honest degradation.** On a surface with no shell or subagents—the claude.ai web app, say—the enforced machinery can't run. Each skill notices, runs the same logic in one context, and leads with the disclosure instead of pretending it ran the full path. Falsely reassuring you is the exact failure these were built to prevent.
 
 ---
 
 ## Install
 
-Claude Code loads skills from `~/.claude/skills/` (personal, all projects) or a project's `.claude/skills/` (that repo only). Drop the skill directories into either.
+Claude Code loads skills from `~/.claude/skills/` (personal, every project) or a project's `.claude/skills/` (that repo only). Drop in the ones you want.
 
-**Personal install (recommended):**
+**Personal install (the one I'd start with):**
 
 ```bash
 git clone https://github.com/robmcquade/claude-skills.git
@@ -65,23 +67,23 @@ foreach ($s in 'pressure-test','improve','set-goal','evaluate-ai-merits') {
 }
 ```
 
-Each skill directory must keep its structure intact — `SKILL.md` at the root, plus the bundled `scripts/`, `schemas/`, and `references/` for pressure-test. Restart Claude Code (or start a new session) and the skills appear; invoke with `/pressure-test`, `/improve`, `/set-goal`. (`evaluate-ai-merits` can fire automatically on AI-tooling content, or be invoked directly.) Three of the four are marked user-invoked only (`disable-model-invocation: true`) — they never fire on their own.
+Keep each skill directory whole—`SKILL.md` at the root, plus the bundled `scripts/`, `schemas/`, and `references/` for pressure-test. Start a new Claude Code session and they show up; invoke with `/pressure-test`, `/improve`, `/set-goal`. (`evaluate-ai-merits` can fire on its own when you share AI-tooling content, or you can invoke it directly.) Three of the four are user-invoked only—they never fire unless you ask.
 
 ---
 
 ## Requirements
 
-- **Claude Code.** These are Claude Code skills, not API prompts or chat-only content.
-- **PowerShell 7 (`pwsh`) for pressure-test's enforced mode.** The pressure-test orchestrator (`Invoke-PressureTest.ps1`) and sensitivity detector (`Test-Sensitivity.ps1`) are PowerShell — which is cross-platform; install `pwsh` on macOS or Linux and the enforced path works there too. **Without `pwsh`, pressure-test still runs** — it falls back to its inline single-context mode (Mode A) and discloses that the enforced gate did not run. The other three skills have no shell dependency.
-- The skills lean on Claude Code internals that evolve: skill frontmatter keys, the `${CLAUDE_SKILL_DIR}` substitution, `disallowed-tools` deny rules, and `claude -p --json-schema` structured output. They were **built and tested against Claude Code in mid-2026 (Opus 4.x era).** If a mechanism behaves differently on your version, that's the likely cause — check the current Claude Code docs.
+- **Claude Code.** These are Claude Code skills, not API prompts or chat-window content.
+- **PowerShell 7 (`pwsh`) for pressure-test's enforced mode.** The pressure-test orchestrator (`Invoke-PressureTest.ps1`) and the sensitivity detector (`Test-Sensitivity.ps1`) are PowerShell—which runs on macOS and Linux too, so install `pwsh` there and the enforced path works the same. **Without it, pressure-test still runs**—it falls back to a single-context inline pass and tells you, plainly, that the enforced gate didn't run. The other three skills need no shell.
+- These lean on Claude Code internals that move: skill frontmatter keys, the `${CLAUDE_SKILL_DIR}` substitution, `disallowed-tools` deny rules, and `claude -p --json-schema` structured output. They were **built and tested against Claude Code in mid-2026 (the Opus 4.x era).** If a mechanism behaves differently on your version, that's the first place to look—check the current Claude Code docs.
 
 ---
 
 ## A note on the security test fixtures
 
-`pressure-test/tests/Run-DetectorTests.ps1` deliberately contains secret-*shaped* strings — a fake AWS key (AWS's own documented `AKIAIOSFODNN7EXAMPLE`), a fake private-key block, the canonical test SSN `123-45-6789`, and Stripe's universal test card `4242 4242 4242 4242`. **Every value is fake**, standard published test data; they exist so the detector can prove it catches them. A secret scanner run over this repo *will* flag that file — that's the detector's own trip-wire data, not a leak. (The runtime fixtures are generated into a temp dir and deleted after each run; nothing secret-shaped is written into the tree.)
+`pressure-test/tests/Run-DetectorTests.ps1` deliberately contains secret-*shaped* strings: a fake AWS key (AWS's own published `AKIAIOSFODNN7EXAMPLE`), a fake private-key block, the canonical test SSN `123-45-6789`, and Stripe's universal test card `4242 4242 4242 4242`. **Every value is fake**—standard published test data—and they're there so the detector can prove it catches them. A secret scanner pointed at this repo *will* flag that file. That's the trip-wire working, not a leak. (The runtime fixtures get generated into a temp dir and deleted after each run; nothing secret-shaped gets written into the tree.)
 
-You can verify the detector yourself:
+Check the detector yourself:
 
 ```bash
 pwsh pressure-test/tests/Run-DetectorTests.ps1   # exit 0 = all pass
@@ -91,4 +93,4 @@ pwsh pressure-test/tests/Run-DetectorTests.ps1   # exit 0 = all pass
 
 ## License
 
-[MIT](LICENSE) © 2026 Rob McQuade. Use them, fork them, adapt them. If they're useful, a link back to [robmcquade.com/skills](https://robmcquade.com/skills) is appreciated but not required.
+[MIT](LICENSE) © 2026 Rob McQuade. Use them, fork them, adapt them. If they earn their keep, a link back to [robmcquade.com/skills](https://robmcquade.com/skills) is appreciated—not required.
