@@ -1,0 +1,51 @@
+name: Bug report
+description: A skill misbehaves, a script errors, or the docs don't match what happens.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - pressure-test
+        - improve
+        - set-goal
+        - evaluate-ai-merits
+        - General / not skill-specific
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, and what did the skill do?
+      placeholder: I ran /pressure-test on … and it …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A copy-pasteable repro beats a description. Redact anything sensitive first.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Claude Code version, OS, and `pwsh --version` if it's a pressure-test script issue.
+      value: |
+        Claude Code:
+        OS:
+        PowerShell:
+  - type: checkboxes
+    id: no-secrets
+    attributes:
+      label: Confirm
+      options:
+        - label: I've removed any real secrets, credentials, or personal data from this report.
+          required: true

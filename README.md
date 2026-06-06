@@ -91,6 +91,12 @@ pwsh pressure-test/tests/Run-DetectorTests.ps1   # exit 0 = all pass
 
 ---
 
+## Feedback & contributions
+
+These got sharper every time someone poked a hole in them, so if you've got a genuinely good catch or idea, I want it. Bugs and concrete suggestions go in [Issues](https://github.com/robmcquade/claude-skills/issues); open-ended ideas and questions go in [Discussions](https://github.com/robmcquade/claude-skills/discussions); changes you want to make yourself go in a pull request (open an Issue first for anything bigger than a typo). [`CONTRIBUTING.md`](CONTRIBUTING.md) has the details.
+
+---
+
 ## License
 
 [MIT](LICENSE) © 2026 Rob McQuade. Use them, fork them, adapt them. If they earn their keep, a link back to [robmcquade.com/skills](https://robmcquade.com/skills) is appreciated—not required.

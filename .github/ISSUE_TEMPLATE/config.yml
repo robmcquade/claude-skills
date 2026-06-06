@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & open-ended ideas
+    url: https://github.com/robmcquade/claude-skills/discussions
+    about: For anything that isn't a specific bug or a concrete suggestion, start a Discussion.

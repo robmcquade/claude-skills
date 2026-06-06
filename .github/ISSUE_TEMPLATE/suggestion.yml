@@ -1,0 +1,30 @@
+name: Suggestion / idea
+description: A sharper lens, a missing failure mode, or a new skill worth building.
+labels: ["suggestion"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill (or new)?
+      options:
+        - pressure-test
+        - improve
+        - set-goal
+        - evaluate-ai-merits
+        - New skill
+        - General
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Lead with the problem, not just the fix.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Your suggestion
+    validations:
+      required: true
