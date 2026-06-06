@@ -10,7 +10,7 @@ This document explains how it works and why it's built the way it is. The operat
 
 When you ask the same Claude that *just helped you build something* to critique it, you get a bad critique. It tends to re-explain and defend the reasoning it just used, because that reasoning is fresh in its head — this is confirmation bias, and it's baked in. A useful critique has to come from somewhere that never saw how the work got made.
 
-The skill solves that by spinning up **fresh-context critics**: separate Claude processes that are handed only the artifact and the goal, with no memory of the conversation that produced it. They critique the *thing*, not the story behind it. Think of it as sending your draft to several sharp outside reviewers who weren't in the room — except it happens in seconds.
+The skill solves that by spinning up **fresh-context critics**: separate Claude processes that are handed only the artifact and the goal, with no memory of the conversation that produced it. They critique the *thing*, not the story behind it. Think of it as sending your draft to several sharp outside reviewers who weren't in the room — except it happens in seconds. And because each reviewer is a separate process, all of that reading and arguing happens off to the side: it never fills up your own conversation. Only the verified findings come back — so your main session stays lean even when the review is heavy.
 
 ## Why it's built on a script instead of just instructions
 
